@@ -3,49 +3,41 @@
 ## Download Dataset
 
 `
-https://zenodo.org/records/17570503
+https://doi.org/10.5281/zenodo.17570503
 `
 
 ## Prepare Dataset
 
-Organize the folder in the following format:
+Download the dataset and decompress it, then place it in the root directory.
 
 ```
-data
- - train
-    - images
-    - annotations
- - valid
-    - images
-    - annotations
- - test
-    - images
-    - annotations
+Dataset
+ - annotations
+ - images
 ```
 
-## Start Training
-```python
-from ccmseg import train_segmentation_model
-
-train_segmentation_model(
-    'data',
-    'train',
-    'valid',
-    'test',
-    'images',
-    'annotations',
-    batch_size=32,
-    save_path='best.pth',
-)
+## Train
+```shell
+train.py
+```
+### Hyperparameter
+```text
+    DATA_DIR = "./Dataset"
+    SET_ID = 2  # 1 or 2 for train
+    BATCH_SIZE = 8
+    EPOCHS = 20
+    LR = 1e-3
+    SAVE_DIR = f"checkpoints_set{SET_ID}"
 ```
 
-## Inference
-```python
-from ccmseg import run_inference
-
-run_inference(
-    'best.pth',
-    'data/test/images',
-    output_dir='infer'
-)
+## Predict
+```shell
+predict.py
+```
+### Hyperparameter
+```text
+    CKPT_PATH = "checkpoints_set2/segmentation/version_4/checkpoints/best-epoch=18-val_loss=0.1213.ckpt"
+    INPUT_PATH = "./Dataset/images"
+    SET_ID = 1  # 1 or 2 for predict
+    OUT_DIR = f"./Output/predictions_set{SET_ID}/{CKPT_PATH.split('/')[2]}"
 ```
